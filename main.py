@@ -1,5 +1,3 @@
-st.caption("deploy check: 2026-03-06 15:00")
-
 """
 このファイルは、Webアプリのメイン処理が記述されたファイルです。
 """
@@ -13,6 +11,10 @@ from dotenv import load_dotenv
 import logging
 # streamlitアプリの表示を担当するモジュール
 import streamlit as st
+
+st.caption("deploy check: 2026-03-06 15:00")
+
+
 # （自作）画面表示以外の様々な関数が定義されているモジュール
 # Streamlitの不具合修正のため、uitilsファイルの名称をapp_utilsに変更
 import app_utils
