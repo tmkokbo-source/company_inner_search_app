@@ -5,16 +5,15 @@
 ############################################################
 # 1. ライブラリの読み込み
 ############################################################
+from dotenv import load_dotenv
+load_dotenv()
+
 # 「.env」ファイルから環境変数を読み込むための関数
 from dotenv import load_dotenv
 # ログ出力を行うためのモジュール
 import logging
 # streamlitアプリの表示を担当するモジュール
 import streamlit as st
-
-st.caption("deploy check: 2026-03-06 15:00")
-
-
 # （自作）画面表示以外の様々な関数が定義されているモジュール
 # Streamlitの不具合修正のため、uitilsファイルの名称をapp_utilsに変更
 import app_utils
@@ -24,8 +23,6 @@ from initialize import initialize
 import components as cn
 # （自作）変数（定数）がまとめて定義・管理されているモジュール
 import constants as ct
-
-load_dotenv()
 
 
 ############################################################
