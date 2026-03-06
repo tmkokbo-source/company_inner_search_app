@@ -67,15 +67,13 @@ def display_initial_ai_message():
     with st.chat_message("assistant"):
         st.success(
             "こんにちは。私は社内文書の情報をもとに回答する生成AIチャットボットです。"
-            "サイドバーで利用目的を選択し、画面下部のチャット欄からメッセージを送信してください。",
-            icon=ct.AI_ICON
+            "サイドバーで利用目的を選択し、画面下部のチャット欄からメッセージを送信してください。"
         )
 
         st.warning(
             "具体的に入力したほうが期待通りの回答を得やすいです。",
-            icon="⚠️"
+            icon=ct.WARNING_ICON
         )
-
 
 
 def display_conversation_log():
