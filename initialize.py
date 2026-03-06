@@ -147,6 +147,9 @@ def initialize_session_state():
     if "messages" not in st.session_state:
         # 「表示用」の会話ログを順次格納するリストを用意
         st.session_state.messages = []
+
+    # 回答生成されなかったため、chat_historyの初期化を追加
+    if "chat_history" not in st.session_state:
         # 「LLMとのやりとり用」の会話ログを順次格納するリストを用意
         st.session_state.chat_history = []
 
