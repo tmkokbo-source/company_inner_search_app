@@ -1,8 +1,6 @@
 """
 このファイルは、Webアプリのメイン処理が記述されたファイルです。
 """
-from dotenv import load_dotenv
-load_dotenv()
 
 ############################################################
 # 1. ライブラリの読み込み
@@ -22,6 +20,8 @@ from initialize import initialize
 import components as cn
 # （自作）変数（定数）がまとめて定義・管理されているモジュール
 import constants as ct
+
+load_dotenv()
 
 
 ############################################################
@@ -66,6 +66,7 @@ cn.display_app_title()
 # サイドバー表示
 with st.sidebar:
     cn.display_select_mode()
+    cn.display_sidebar_content()
 
 # AIメッセージの初期表示
 cn.display_initial_ai_message()
