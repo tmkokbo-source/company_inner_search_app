@@ -122,9 +122,10 @@ def initialize_retriever():
     embeddings = OpenAIEmbeddings()
     
     # チャンク分割用のオブジェクトを作成
+    # 【問題2】変数化されていない数値を、定数管理ファイル（「constants.py」）の定数に置き換える
     text_splitter = CharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=50,
+        chunk_size=ct.CHUNK_SIZE,
+        chunk_overlap=ct.CHUNK_OVERLAP,
         separator="\n"
     )
 
@@ -135,7 +136,10 @@ def initialize_retriever():
     db = Chroma.from_documents(splitted_docs, embedding=embeddings)
 
     # ベクターストアを検索するRetrieverの作成
-    st.session_state.retriever = db.as_retriever(search_kwargs={"k": 3})
+    # 【問題1】ベクターストアから取り出してプロンプトに埋め込む関連ドキュメントの数を「3」から「5」に変更
+    # 【問題2】変数化されていない数値を、定数管理ファイル（「constants.py」）の定数に置き換える
+    st.session_state.retriever = db.as_retriever(search_kwargs={"k": ct.K_VALUE})
+
 
 
 def initialize_session_state():
