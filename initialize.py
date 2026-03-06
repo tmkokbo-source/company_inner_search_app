@@ -166,14 +166,24 @@ def load_data_sources():
     recursive_file_check(ct.RAG_TOP_FOLDER_PATH, docs_all)
 
     web_docs_all = []
+    logger = logging.getLogger(ct.LOGGER_NAME)
+
+    # WebBaseLoader での警告回避用に USER_AGENT を補完
+    if not os.getenv("USER_AGENT"):
+        os.environ["USER_AGENT"] = "company-inner-search-app/1.0"
+
     # ファイルとは別に、指定のWebページ内のデータも読み込み
     # 読み込み対象のWebページ一覧に対して処理
+    # Streamlitの不具合修正のため、WebBaseLoaderでの警告回避用にUSER_AGENTを補完するコードを追加
     for web_url in ct.WEB_URL_LOAD_TARGETS:
-        # 指定のWebページを読み込み
-        loader = WebBaseLoader(web_url)
-        web_docs = loader.load()
-        # for文の外のリストに読み込んだデータソースを追加
-        web_docs_all.extend(web_docs)
+        try:
+            # 指定のWebページを読み込み
+            loader = WebBaseLoader(web_url)
+            web_docs = loader.load()
+            # for文の外のリストに読み込んだデータソースを追加
+            web_docs_all.extend(web_docs)
+        except Exception as e:
+            logger.warning(f"Webページの読み込みに失敗しました: {web_url}\n{e}")
     # 通常読み込みのデータソースにWebページのデータを追加
     docs_all.extend(web_docs_all)
 
