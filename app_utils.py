@@ -69,6 +69,11 @@ def get_llm_response(chat_message):
     Returns:
         LLMからの回答
     """
+    # 起動直後の重い初期化を避けるため、Retrieverは初回リクエスト時に作成
+    if "retriever" not in st.session_state:
+        from initialize import initialize_retriever
+        initialize_retriever()
+
     # LLMのオブジェクトを用意
     llm = ChatOpenAI(model_name=ct.MODEL, temperature=ct.TEMPERATURE)
 
