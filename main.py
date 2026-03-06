@@ -80,11 +80,8 @@ try:
     # 会話ログの表示
     cn.display_conversation_log()
 except Exception as e:
-    # エラーログの出力
-    logger.error(f"{ct.CONVERSATION_LOG_ERROR_MESSAGE}\n{e}")
-    # エラーメッセージの画面表示
-    st.error(app_utils.build_error_message(ct.CONVERSATION_LOG_ERROR_MESSAGE), icon=ct.ERROR_ICON)
-    # 後続の処理を中断
+    logger.error(f"{ct.GET_LLM_RESPONSE_ERROR_MESSAGE}\n{e}")
+    st.error(f"{ct.GET_LLM_RESPONSE_ERROR_MESSAGE}\n{e}", icon=ct.ERROR_ICON)
     st.stop()
 
 
