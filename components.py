@@ -40,24 +40,24 @@ def display_sidebar_content():
     サイドバー内の説明文・入力例を表示
     """
     st.divider()
+    
+    # 社内文書検索の説明
+    st.markdown("**【社内文書検索】を選択した場合**")
+    st.info("入力内容と関連性が高い社内文書のありかを検索できます。")
+    st.code(
+        "【入力例】\n社員の育成方針に関するMTGの議事録",
+        wrap_lines=True,
+        language=None
+    )
 
-    if st.session_state.mode == ct.ANSWER_MODE_1:
-        st.markdown("**【社内文書検索】を選択した場合**")
-        st.info("入力内容と関連性が高い社内文書のありかを検索できます。")
-        st.code(
-            "【入力例】\n社員の育成方針に関するMTGの議事録",
-            wrap_lines=True,
-            language=None
-        )
-
-    elif st.session_state.mode == ct.ANSWER_MODE_2:
-        st.markdown("**【社内問い合わせ】を選択した場合**")
-        st.info("質問・要望に対して、社内文書の情報をもとに回答を得られます。")
-        st.code(
-            "【入力例】\n人事部に所属している従業員情報を一覧化して",
-            wrap_lines=True,
-            language=None
-        )
+    # 社内問い合わせの説明
+    st.markdown("**【社内問い合わせ】を選択した場合**")
+    st.info("質問・要望に対して、社内文書の情報をもとに回答を得られます。")st.code(
+    st.code(
+        "【入力例】\n人事部に所属している従業員情報を一覧化して",
+        wrap_lines=True,
+        language=None
+    )
 
 
 def display_initial_ai_message():
