@@ -46,6 +46,28 @@ def get_source_icon(source):
     return icon
 
 
+# 【問題4】参照先ドキュメントのページ数を表示する機能の実装
+# ページ番号付き文字列を返すための共通関数
+def format_source_with_page(source, page=None):
+    """
+    PDFファイルの場合のみ、ページ番号付きの文字列を返す
+
+    Args:
+        source: 参照元のパスやURL
+        page: ドキュメントmetadata上のページ番号
+
+    Returns:
+        ページ番号付き、またはそのままの参照元文字列
+    """
+    # page が取得できていて、かつ PDF ファイルの場合のみページ番号を表示
+    if page is not None and str(source).lower().endswith(".pdf"):
+        # LangChainの page は 0始まりのことがあるため、画面表示用に +1
+        display_page = int(page) + 1
+        return f"{source}（ページNo.{display_page}）"
+    
+    return source
+
+
 def build_error_message(message):
     """
     エラーメッセージと管理者問い合わせテンプレートの連結
@@ -115,6 +137,7 @@ def get_llm_response(chat_message):
 
     # LLMへのリクエストとレスポンス取得
     llm_response = chain.invoke({"input": chat_message, "chat_history": st.session_state.chat_history})
+    
     # LLMレスポンスを会話履歴に追加
     # LLMへのリクエストとレスポンスの両方を会話履歴に追加するように変更
     st.session_state.chat_history.extend([

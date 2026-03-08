@@ -102,14 +102,19 @@ def display_conversation_log():
                         # 補足文の表示
                         st.markdown(message["content"]["main_message"])
 
-                        # 参照元のありかに応じて、適したアイコンを取得
-                        icon = app_utils.get_source_icon(message['content']['main_file_path'])
-                        # 参照元ドキュメントのページ番号が取得できた場合にのみ、ページ番号を表示
+                        # 【問題4】参照先ドキュメントのページ数を表示する機能の実装のため変更
+                        # 表示用文字列を作成し、アイコンを取得する関数に渡す
                         if "main_page_number" in message["content"]:
-                            st.success(f"{message['content']['main_file_path']}", icon=icon)
+                            main_file_info = app_utils.format_source_with_page(
+                                message["content"]["main_file_path"],
+                                message["content"]["main_page_number"]
+                            )                        
                         else:
-                            st.success(f"{message['content']['main_file_path']}", icon=icon)
-                        
+                            main_file_info = message["content"]["main_file_path"] 
+                        # 参照元のありかに応じて、適したアイコンを取得
+                        icon = app_utils.get_source_icon(message["content"]["main_file_path"])   
+                        st.success(main_file_info, icon=icon)                                                
+                                                        
                         # ==========================================
                         # ユーザー入力値と関連性が高いサブドキュメントのありかを表示
                         # ==========================================
@@ -119,13 +124,21 @@ def display_conversation_log():
 
                             # サブドキュメントのありかを一覧表示
                             for sub_choice in message["content"]["sub_choices"]:
-                                # 参照元のありかに応じて、適したアイコンを取得
-                                icon = app_utils.get_source_icon(sub_choice['source'])
-                                # 参照元ドキュメントのページ番号が取得できた場合にのみ、ページ番号を表示
+                                
+                                # 【問題4】参照先ドキュメントのページ数を表示する機能の実装のため変更
+                                # 表示用文字列を作成
                                 if "page_number" in sub_choice:
-                                    st.info(f"{sub_choice['source']}", icon=icon)
+                                    sub_file_info = app_utils.format_source_with_page(
+                                        sub_choice["source"],
+                                        sub_choice["page_number"]
+                                    )
                                 else:
-                                    st.info(f"{sub_choice['source']}", icon=icon)
+                                    sub_file_info = sub_choice["source"]
+
+                                # 参照元のありかに応じて、適したアイコンを取得
+                                icon = app_utils.get_source_icon(sub_choice["source"])
+                                st.info(sub_file_info, icon=icon)
+
                     # ファイルのありかの情報が取得できなかった場合、LLMからの回答のみ表示
                     else:
                         st.markdown(message["content"]["answer"])
@@ -142,9 +155,12 @@ def display_conversation_log():
                         # 「情報源」の文字を太字で表示
                         st.markdown(f"##### {message['content']['message']}")
                         # ドキュメントのありかを一覧表示
-                        for file_info in message["content"]["file_info_list"]:
+                        for file_info in message["content"]["file_info_list"]:                            
+                            # 【問題4】参照先ドキュメントのページ数を表示する機能の実装のため変更
+                            # ページ番号付き文字列でも、元のパス部分でアイコン判定する
+                            source_for_icon = file_info.split("（ページNo.")[0]
                             # 参照元のありかに応じて、適したアイコンを取得
-                            icon = app_utils.get_source_icon(file_info)
+                            icon = app_utils.get_source_icon(source_for_icon)
                             st.info(file_info, icon=icon)
 
 
@@ -160,7 +176,7 @@ def display_search_llm_response(llm_response):
     """
     # LLMからのレスポンスに参照元情報が入っており、かつ「該当資料なし」が回答として返された場合
     if llm_response["context"] and llm_response["answer"] != ct.NO_DOC_MATCH_ANSWER:
-
+        
         # ==========================================
         # ユーザー入力値と最も関連性が高いメインドキュメントのありかを表示
         # ==========================================
@@ -177,11 +193,12 @@ def display_search_llm_response(llm_response):
         if "page" in llm_response["context"][0].metadata:
             # ページ番号を取得
             main_page_number = llm_response["context"][0].metadata["page"]
-            # 「メインドキュメントのファイルパス」と「ページ番号」を表示
-            st.success(f"{main_file_path}", icon=icon)
+            ##【問題4】参照先ドキュメントのページ数を表示する機能の実装のため変更
+            main_file_info = app_utils.format_source_with_page(main_file_path, main_page_number)
+            st.success(main_file_info, icon=icon)
         else:
             # 「メインドキュメントのファイルパス」を表示
-            st.success(f"{main_file_path}", icon=icon)
+            st.success(main_file_path, icon=icon)
 
         # ==========================================
         # ユーザー入力値と関連性が高いサブドキュメントのありかを表示
@@ -230,14 +247,16 @@ def display_search_llm_response(llm_response):
             # サブドキュメントに対してのループ処理
             for sub_choice in sub_choices:
                 # 参照元のありかに応じて、適したアイコンを取得
-                icon = app_utils.get_source_icon(sub_choice['source'])
+                icon = app_utils.get_source_icon(sub_choice["source"])
+                # 【問題4】参照先ドキュメントのページ数を表示する機能の実装のため変更
                 # ページ番号が取得できない場合のための分岐処理
                 if "page_number" in sub_choice:
                     # 「サブドキュメントのファイルパス」と「ページ番号」を表示
-                    st.info(f"{sub_choice['source']}", icon=icon)
+                    sub_file_info = app_utils.format_source_with_page(sub_choice["source"], sub_choice["page_number"])
+                    st.info(sub_file_info, icon=icon)
                 else:
                     # 「サブドキュメントのファイルパス」を表示
-                    st.info(f"{sub_choice['source']}", icon=icon)
+                    st.info(sub_choice["source"], icon=icon)
         
         # 表示用の会話ログに格納するためのデータを用意
         # - 「mode」: モード（「社内文書検索」or「社内問い合わせ」）
@@ -314,10 +333,11 @@ def display_contact_llm_response(llm_response):
                 # ページ番号を取得
                 page_number = document.metadata["page"]
                 # 「ファイルパス」と「ページ番号」
-                file_info = f"{file_path}"
+                # 【問題4】参照先ドキュメントのページ数を表示する機能の実装のため変更
+                file_info = app_utils.format_source_with_page(file_path, page_number)
             else:
                 # 「ファイルパス」のみ
-                file_info = f"{file_path}"
+                file_info = file_path
 
             # 参照元のありかに応じて、適したアイコンを取得
             icon = app_utils.get_source_icon(file_path)
