@@ -81,10 +81,10 @@ try:
     # 会話ログの表示
     cn.display_conversation_log()
 except Exception as e:
-    logger.error(f"{ct.GET_LLM_RESPONSE_ERROR_MESSAGE}\n{e}")
-    st.error(f"{ct.GET_LLM_RESPONSE_ERROR_MESSAGE}\n{e}", icon=ct.ERROR_ICON)
+    logger.exception(ct.GET_LLM_RESPONSE_ERROR_MESSAGE)
+    st.error(ct.GET_LLM_RESPONSE_ERROR_MESSAGE, icon=ct.ERROR_ICON)
+    st.exception(e)
     st.stop()
-
 
 ############################################################
 # 6. チャット入力の受け付け
